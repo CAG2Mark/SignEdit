@@ -20,7 +20,8 @@ public class    LegacyToMiniMessageConverter {
             int remaining = string.length() - i + 1;
 
             if (remaining <= 8) {
-                substring = string.substring(i, string.length() - 1);
+                substring = string.substring(i, string.length());
+                System.out.println(substring);
             } else {
                 // The second argument of String#substring is exclusive
                 substring = string.substring(i, i + 8);
@@ -40,9 +41,7 @@ public class    LegacyToMiniMessageConverter {
                 }
                 case ESCAPED -> {
                     i++;
-                    builder.append(string, i, i + 2);
-
-                    i++;
+                    builder.append(string.charAt(i));
                 }
                 case NO_FORMAT -> builder.append(string.charAt(i));
             }
