@@ -6,9 +6,53 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.Rotatable;
 import org.bukkit.command.CommandSender;
 
 public class Util {
+    public static BlockData translateRotation(BlockData oldData, BlockData newData) {
+        if (oldData instanceof Rotatable rot && newData instanceof Directional dir) {
+            if (rot.getRotation().isCartesian()) {
+                dir.setFacing(rot.getRotation());
+
+                return dir;
+            }
+
+            switch (rot.getRotation()) {
+                case BlockFace.NORTH_WEST, BlockFace.NORTH_NORTH_WEST, BlockFace.NORTH_NORTH_EAST -> dir.setFacing(BlockFace.NORTH);
+                case BlockFace.NORTH_EAST, BlockFace.EAST_NORTH_EAST, BlockFace.EAST_SOUTH_EAST -> dir.setFacing(BlockFace.EAST);
+                case BlockFace.SOUTH_EAST, BlockFace.SOUTH_SOUTH_EAST, BlockFace.SOUTH_SOUTH_WEST -> dir.setFacing(BlockFace.SOUTH);
+                case BlockFace.SOUTH_WEST, BlockFace.WEST_SOUTH_WEST, BlockFace.WEST_NORTH_WEST -> dir.setFacing(BlockFace.WEST);
+            }
+
+            return dir;
+        }
+
+        if (oldData instanceof Directional dir && newData instanceof Rotatable rot) {
+            rot.setRotation(dir.getFacing());
+
+            return rot;
+        }
+
+        if (oldData instanceof Rotatable oldRot && newData instanceof Rotatable newRot) {
+            newRot.setRotation(oldRot.getRotation());
+
+            return newRot;
+        }
+
+        if (oldData instanceof Directional oldDir && newData instanceof Directional newDir) {
+            newDir.setFacing(oldDir.getFacing());
+
+            return newDir;
+        }
+
+        // Failsafe
+        return newData;
+    }
+
     public static Component clearClickEvents(Component component) {
         if (component.clickEvent() != null) {
             component = component.clickEvent(null);

@@ -266,9 +266,7 @@ public class SignEditCommand {
 
                                     newSign.setWaxed(sign.isWaxed());
 
-                                    Rotatable rot = (Rotatable) newSign.getBlockData();
-                                    rot.setRotation(((Rotatable) sign.getBlockData()).getRotation());
-                                    newSign.setBlockData(rot);
+                                    newSign.setBlockData(Util.translateRotation(sign.getBlockData(), newSign.getBlockData()));
 
                                     Waterlogged wat = (Waterlogged) newSign.getBlockData();
                                     wat.setWaterlogged(((Waterlogged) sign.getBlockData()).isWaterlogged());
