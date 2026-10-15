@@ -21,7 +21,6 @@ public class    LegacyToMiniMessageConverter {
 
             if (remaining <= 8) {
                 substring = string.substring(i, string.length());
-                System.out.println(substring);
             } else {
                 // The second argument of String#substring is exclusive
                 substring = string.substring(i, i + 8);
