@@ -26,6 +26,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.Rotatable;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.sign.Side;
 import org.bukkit.block.sign.SignSide;
 import org.bukkit.entity.Player;
@@ -264,7 +266,16 @@ public class SignEditCommand {
 
                                     newSign.setWaxed(sign.isWaxed());
 
+                                    Rotatable rot = (Rotatable) newSign.getBlockData();
+                                    rot.setRotation(((Rotatable) sign.getBlockData()).getRotation());
+                                    newSign.setBlockData(rot);
+
+                                    Waterlogged wat = (Waterlogged) newSign.getBlockData();
+                                    wat.setWaterlogged(((Waterlogged) sign.getBlockData()).isWaterlogged());
+                                    newSign.setBlockData(wat);
+
                                     newSign.update(true, false);
+
                                     tryLoggingPlacement(player, newSign);
 
                                     return Command.SINGLE_SUCCESS;

@@ -10,6 +10,7 @@ authors: [Hydrintegral]
 softdepend:
   - PlotSquared
   - CoreProtect
+  - CKEssentials # CKEssentials also provides signedit, this ensures this plugin's signedit takes precedence
 
 permissions:
   signedit.edit:
