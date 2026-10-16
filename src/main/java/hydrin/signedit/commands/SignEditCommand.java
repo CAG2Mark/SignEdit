@@ -20,6 +20,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
@@ -30,6 +31,7 @@ import org.bukkit.block.data.Rotatable;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.sign.Side;
 import org.bukkit.block.sign.SignSide;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class SignEditCommand {
@@ -68,7 +70,11 @@ public class SignEditCommand {
 
                                     checkCommandPredicates(player, sign, Permissions.EDIT, true);
 
-                                    sign.getTargetSide(player).line(lineIndex, Util.buildMiniMessage(player).deserialize(text));
+                                    SignSide side = sign.getTargetSide(player);
+                                    ClickEvent<?> clickEvent = Util.getFirstClickEvent(side.line(lineIndex));
+
+                                    side.line(lineIndex, Util.buildMiniMessage(player).deserialize(text));
+                                    if (clickEvent != null) { side.line(lineIndex, side.line(lineIndex).clickEvent(clickEvent)); }
 
                                     tryLoggingRemoval(player, sign);
                                     sign.update();
@@ -97,11 +103,17 @@ public class SignEditCommand {
                                             boolean success = false;
                                             for (Component line : side.lines()) {
                                                 String raw = miniMessage.serialize(line);
+                                                ClickEvent clickEvent = Util.getFirstClickEvent(line);
+
                                                 if (raw.contains(text)) {
                                                     success = true;
+                                                } else {
+                                                    continue;
                                                 }
 
                                                 side.line(i, miniMessage.deserialize(raw.replace(text, with)));
+
+                                                if (clickEvent != null) { side.line(i, side.line(i).clickEvent(clickEvent)); }
 
                                                 i++;
                                             }
@@ -182,6 +194,8 @@ public class SignEditCommand {
                             return Command.SINGLE_SUCCESS;
                         })
                 )
+                // This subcommand uses some delicate logic that assumes the signs don't already have a clickevent added
+                // on a different line. Maybe this should be different, but it seems unlikely to cause problems?
                 .then(Commands.literal("clickevent")
                         .then(Commands.literal("set")
                                 .then(Commands.argument("command", StringArgumentType.greedyString())
@@ -314,9 +328,57 @@ public class SignEditCommand {
                                         );
                             }
 
-                            component.appendNewline().append(footer);
+                            component.appendNewline().resetStyle().append(footer);
 
                             player.sendMessage(component);
+
+                            return Command.SINGLE_SUCCESS;
+                        })
+                )
+                .then(Commands.literal("help")
+                        .executes(context -> {
+                            CommandSender sender = context.getSource().getSender();
+
+                            if (!(sender.hasPermission(Permissions.HELP))) {
+                                throw ERROR_NO_PERMISSION.create();
+                            }
+
+                            Component header = MINI_MESSAGE.deserialize(
+                                    "<gray><st>              <bold>\u200C<reset><aqua> SignEdit Help <reset><gray><st>              <bold>\u200C"
+                            );
+                            Component footer = MINI_MESSAGE.deserialize(
+                                    "<gray><st>                                              <bold>\u200C"
+                            );
+                            Component disclaimer = MINI_MESSAGE.deserialize(
+                                    "<white>Commands that modify signs will target the sign face that you're looking at:"
+                            );
+
+                            TextComponent.Builder component = Component.text()
+                                    .append(header)
+                                    .appendNewline()
+                                    .resetStyle()
+                                    .append(disclaimer)
+                                    .appendNewline();
+
+                            for (hydrin.signedit.commands.Command command : hydrin.signedit.commands.Command.values()) {
+                                component.appendNewline()
+                                        .resetStyle()
+                                        .append(Component.text("/").color(NamedTextColor.GRAY))
+                                        .append(Component.text("signedit ").color(NamedTextColor.AQUA));
+
+                                if (command.getUsage() == null) {
+                                    component.append(Component.text(command.getName()).color(NamedTextColor.DARK_AQUA));
+                                } else {
+                                    component.append(Component.text(command.getUsage()).color(NamedTextColor.DARK_AQUA));
+                                }
+
+                                component.append(Component.text(" | ").color(NamedTextColor.GRAY))
+                                        .append(Component.text(command.getDescription()).color(NamedTextColor.WHITE));
+                            }
+
+                            component.appendNewline().resetStyle().append(footer);
+
+                            sender.sendMessage(component);
 
                             return Command.SINGLE_SUCCESS;
                         })

@@ -10,6 +10,7 @@ public class Permissions {
     public static final String CLICKEVENT = "signedit.clickevent";
     public static final String TYPE = "signedit.type";
     public static final String PRINT = "signedit.print";
+    public static final String HELP = "signedit.help";
 
     // Formatting
     public static final String FORMATTING_COLOR = "signedit.formatting.color";

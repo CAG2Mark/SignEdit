@@ -2,6 +2,7 @@ package hydrin.signedit.util;
 
 import hydrin.signedit.Permissions;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -51,6 +52,20 @@ public class Util {
 
         // Failsafe
         return newData;
+    }
+
+    public static ClickEvent<?> getFirstClickEvent(Component component) {
+        if (component.clickEvent() != null) {
+            return component.clickEvent();
+        }
+
+        for (Component child : component.children()) {
+            if (getFirstClickEvent(child) != null) {
+                return getFirstClickEvent(child);
+            }
+        }
+
+        return null;
     }
 
     public static Component clearClickEvents(Component component) {

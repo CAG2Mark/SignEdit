@@ -4,19 +4,20 @@ SignEdit is a simple, but advanced sign editor paper plugin with built in [PlotS
 
 ## Commands
 
-Each command targets the sign face you're looking at:
+Commands that modify signs will target the sign face that you're looking at:
 
-| Command                                 | Description                                                                                          | Permission            |
-| --------------------------------------- | ---------------------------------------------------------------------------------------------------- | --------------------- |
-| `/signedit line <text>`                 | Modifies the text on a specified line.                                                               | `signedit.edit`       |
-| `/signedit replace <oldText> <newText>` | Replaces all instances of a specific piece of text with another specific piece of text.              | `signedit.replace`    |
-| `/signedit dye <dyeColor>`              | Sets the dye color.                                                                                  | `signedit.dye`        |
-| `/signedit glow`                        | Toggles the glow state.                                                                              | `signedit.glow`       |
-| `/signedit wax`                         | Toggles the wax state.                                                                               | `signedit.wax`        |
-| `/signedit clickevent set <command>`    | Sets the click event to run the specified command.                                                   | `signedit.clickevent` |
-| `/signedit clickevent clear`            | Clears all click events.                                                                             | `signedit.clickevent` |
-| `/signedit type <signType>`             | Sets the sign material to the specified type.                                                        | `signedit.type`       |
-| `/signedit print`                       | Prints copyable text of each line in chat.                                                           | `signedit.print`      |
+| Command                                 | Description                                                                             | Permission            |
+|-----------------------------------------|-----------------------------------------------------------------------------------------| --------------------- |
+| `/signedit <line> <text>`               | Modifies the text on the specified line.                                                | `signedit.edit`       |
+| `/signedit replace <oldText> <newText>` | Replaces all instances of a specific piece of text with another specific piece of text. | `signedit.replace`    |
+| `/signedit dye <dyeColor>`              | Sets the dye color.                                                                     | `signedit.dye`        |
+| `/signedit glow`                        | Toggles the glow state.                                                                 | `signedit.glow`       |
+| `/signedit wax`                         | Toggles the wax state.                                                                  | `signedit.wax`        |
+| `/signedit clickevent set <command>`    | Sets the click event to run the specified command.                                      | `signedit.clickevent` |
+| `/signedit clickevent clear`            | Clears all click events.                                                                | `signedit.clickevent` |
+| `/signedit type <signType>`             | Sets the sign material to the specified type.                                           | `signedit.type`       |
+| `/signedit print`                       | Prints copyable text of each line in chat.                                              | `signedit.print`      |
+| `/signedit help`                        | Lists all commands and their functions.                                                 | `signedit.help`       |
 
 ## Formatting
 

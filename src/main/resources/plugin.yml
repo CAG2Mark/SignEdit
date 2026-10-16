@@ -31,6 +31,9 @@ permissions:
   signedit.print:
     description:
       "Grants access to /signedit print"
+  signedit.help:
+    description:
+      "Grants access to /signedit help"
 
   signedit.formatting.color:
     description:
